@@ -54,7 +54,6 @@ const Bottom = ({
           withCredentials: true,
         });
         if (response.data?.success) {
-          console.log(response.data?.success);
           setData(response.data?.driver);
         }
       } catch (error) {

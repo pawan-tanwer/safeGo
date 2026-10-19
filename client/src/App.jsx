@@ -102,6 +102,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/driving-details" element={<DrivingDetails />} />
+        <Route path="/driver-auth" element={<DriverAuth/>}/>
         <Route element={<ProtectRiderDashBoard />}>
           <Route path="/rider-dashboard" element={<RiderDashboard />} />
         </Route>

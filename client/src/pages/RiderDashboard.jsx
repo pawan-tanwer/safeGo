@@ -4,7 +4,7 @@ import LeftSide from "../components/RiderDashboard/LeftSide";
 import RightSide from "../components/RiderDashboard/RightSide";
 import BookRide from "../components/RiderDashboard/BookRide";
 import { StoreContext } from "../context/StoreContext";
-import { useRidetracking } from "../Hooks/UseRideTracking";
+import { useRidetracking } from "../Hooks/useRideTracking";
 import { useRiderNotified } from "../Hooks/useRiderNotified";
 import Support from "../components/RiderDashboard/Support";
 import Settings from "../components/RiderDashboard/Settings";
