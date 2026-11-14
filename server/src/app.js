@@ -12,7 +12,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser());    
 // routes
 const authRouter = require("./routes/auth.route.js");
 const driverRouter= require("./routes/driver.route.js");
@@ -25,6 +25,12 @@ app.get("/",(req,res)=>{
     res.status(200).json({
         success:true,
         message:"Server is running"
+    })
+})
+app.get("/ping",(req,res)=>{
+    res.status(200).json({
+        success:true,
+        message:"pong"
     })
 })
 
