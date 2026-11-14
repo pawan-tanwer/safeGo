@@ -6,7 +6,7 @@ export const connectSocket = (token) => {
 
   if (socket) return socket;
 
-  socket = io("http://localhost:8000", {
+  socket = io("https://safego-backend-2fag.onrender.com", {
     auth: { token },
     autoConnect: true,
   });

@@ -18,9 +18,9 @@ const storeContextProvider = (props) =>{
     const [routeCoords,setRouteCoords] = useState([]);
     const [routeInfo,setRouteInfo] = useState({distance:null,durationMin:null});
 
-    const rideUrl   ="http://localhost:8000/api/ride";
-    const authUrl   ="http://localhost:8000/api/auth";
-    const driverUrl ="http://localhost:8000/api/driver"
+    const rideUrl   ="https://safego-backend-2fag.onrender.com/api/ride";
+    const authUrl   ="https://safego-backend-2fag.onrender.com/api/auth";
+    const driverUrl ="https://safego-backend-2fag.onrender.com/api/driver"
     const [rideData,setRideData] = useState();
     const [carData,setCarData] = useState({})
     const [userData,setUserData] = useState();

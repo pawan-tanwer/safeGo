@@ -6,7 +6,9 @@ const app = express();
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173",
+            "https://safego-818m.onrender.com"
+        ],
         credentials: true,
     })
 );
