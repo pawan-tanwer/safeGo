@@ -11,6 +11,7 @@ const jwtToken = require("../utils/jwt.js");
 
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const DEFAULT_ROLE = "rider";
 
 const register = async (req, res) => {
   try {
@@ -23,6 +24,30 @@ const register = async (req, res) => {
       });
     }
 
+    // Reject objects/arrays (e.g. { "$ne": null }) so they can't reach the Mongo query.
+    if ([name, password, email, phone].some((v) => typeof v !== "string")) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid input",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
+    }
+
+    // The client must not be able to pick any role it wants.
+    if (role !== undefined && !ALLOWED_ROLES.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role",
+      });
+    }
+    const safeRole = role ?? DEFAULT_ROLE;
+
     const isUserExist = await userModel.findOne({
       $or: [{ email }, { phone }],
     });
@@ -34,32 +59,40 @@ const register = async (req, res) => {
       });
     }
 
-    if (password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 8 character",
-      });
-    }
-
     const hashPassword = await bcrypt.hash(password, 12);
 
     const user = await userModel.create({
       name,
       email,
       phone,
-      role: role,
+      role: safeRole,
       password: hashPassword,
       isEmailVerified: false,
     });
 
-    const otp = await createOtp(user.email, "email-verification");
-    await sendOtpEmail(user.email, otp);
-    res.status(201).json({
+    // Send the OTP BEFORE replying. If this fails, remove the half-created
+    // user so they can register again instead of being stuck on "User already exists".
+    try {
+      const otp = await createOtp(user.email, "email-verification");
+      await sendOtpEmail(user.email, otp);
+    } catch (otpError) {
+      await userModel.deleteOne({ _id: user._id });
+      throw otpError;
+    }
+
+    return res.status(201).json({
       success: true,
       message: "OTP sent to your email",
     });
   } catch (error) {
-    await userModel.deleteOne({ _id: user._id });
+    // Two requests with the same email/phone at the same moment (unique index).
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
     console.error("register error :", error);
     return res.status(500).json({
       success: false,
@@ -67,7 +100,6 @@ const register = async (req, res) => {
     });
   }
 };
-
 const verifyEmail = async (req, res) => {
   try {
     const { email, otp } = req.body;
