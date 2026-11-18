@@ -59,6 +59,7 @@ const register = async (req, res) => {
       message: "OTP sent to your email",
     });
   } catch (error) {
+    await userModel.deleteOne({ _id: user._id });
     console.error("register error :", error);
     return res.status(500).json({
       success: false,

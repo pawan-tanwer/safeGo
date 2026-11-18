@@ -9,22 +9,25 @@ const transporter = nodemailer.createTransport({
 });
 
 
-const sendOtpEmail = async(email,otp)=>{
-    await transporter.sendMail({
-        from:`"SafeGo" <${process.env.USER_EMAIL}>`,
-        to:email,
-        subject:"SafeGo Email Verification",
-        html:`
-        <h2>Verify your SafeGo account</h2>
-        <p>Your Verification OTP is :</p>
-
-        <h1>${otp}</h1>
-
-        <p>This OTP will expire in 5 minutes.</p>
-        <p>Do not share this OTP with anyone</p>
-        `
-    })
-}
+const sendOtpEmail = async (email, otp) => {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": process.env.BREVO_API_KEY,
+      "content-type": "application/json",
+      accept: "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: "SafeGo", email: process.env.USER_EMAIL },
+      to: [{ email }],
+      subject: "SafeGo Email Verification",
+      htmlContent: `<h2>Verify your SafeGo account</h2>
+        <p>Your OTP is:</p><h1>${otp}</h1>
+        <p>This OTP will expire in 5 minutes. Do not share it with anyone.</p>`,
+    }),
+  });
+  if (!res.ok) throw new Error(`Email API ${res.status}: ${await res.text()}`);
+};
 
 module.exports ={
     sendOtpEmail
