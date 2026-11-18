@@ -71,6 +71,7 @@ const Login = ({setShowOtp,setOtpEmail}) => {
       if (res.data?.success) {
         setAccessToken(res.data.accessToken);
         setUserData(res.data.user);
+        setAuthentication(true);
         toast.success(res.data.message);
         if(role == "rider"){
           navigate("/rider-dashboard");

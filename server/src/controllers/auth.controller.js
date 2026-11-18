@@ -53,13 +53,11 @@ const register = async (req, res) => {
     });
 
     const otp = await createOtp(user.email, "email-verification");
-
+    await sendOtpEmail(user.email, otp);
     res.status(201).json({
       success: true,
       message: "OTP sent to your email",
     });
-
-    await sendOtpEmail(user.email, otp);
   } catch (error) {
     console.error("register error :", error);
     return res.status(500).json({
