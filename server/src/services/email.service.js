@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
 
 
 const sendOtpEmail = async (email, otp) => {
+    console.log("BREVO key:", process.env.BREVO_API_KEY?.slice(0, 9), process.env.BREVO_API_KEY?.length);
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {

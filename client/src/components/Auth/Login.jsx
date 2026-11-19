@@ -76,7 +76,7 @@ const Login = ({setShowOtp,setOtpEmail}) => {
         if(role == "rider"){
           navigate("/rider-dashboard");
         }else{
-          navigate("/driver-dashboard");
+          navigate("/driver-auth");
         }
       }
     } catch (error) {

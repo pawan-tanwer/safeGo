@@ -12,6 +12,7 @@ const jwtToken = require("../utils/jwt.js");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const DEFAULT_ROLE = "rider";
+const ALLOWED_ROLES = ["rider", "driver"];
 
 const register = async (req, res) => {
   try {

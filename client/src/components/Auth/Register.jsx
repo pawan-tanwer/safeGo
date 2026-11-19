@@ -75,7 +75,7 @@ const Register = () => {
     } catch (error) {
       setLoading(false);
       toast.error(error.response?.data?.message || "Something wrong");
-      console.error("frontend register error :", error);
+      console.error("frontend register error :", error.response?.data?.message);
     } finally {
       setLoading(false);
     }
